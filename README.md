@@ -69,7 +69,7 @@ These are not rare events. In India, weather disruptions affect gig workers on a
 The result: gig workers bear 100% of the financial risk from environmental disruptions, with no institutional support.  
 
 ---
-### OUR SOLUTION
+### Our Solution
 ---
 ## 💡 What is GigGuard?
 
