@@ -69,3 +69,120 @@ These are not rare events. In India, weather disruptions affect gig workers on a
 The result: gig workers bear 100% of the financial risk from environmental disruptions, with no institutional support.  
 
 ---
+## 💡 What is GigGuard?
+
+> **GigGuard** is a web-based micro-insurance platform that provides automated, weather-triggered income compensation to gig workers. Think of it as a **financial airbag** — invisible when not needed, but instantly protective when a crisis hits.
+
+---
+
+GigGuard sits at the intersection of three powerful technologies:
+```
+Real-Time Weather Data  +  AI Risk Assessment  +  Automated Insurance Engine
+                                    =
+         Instant, Fair, Transparent Income Protection for Gig Workers
+```
+
+---
+
+## 🎯 Core Value Proposition
+
+| For Workers | For Society |
+|---|---|
+| Income stability during disruptions | Reduced poverty and social vulnerability |
+| Peace of mind to prioritize safety | More ethical and sustainable gig economy |
+| Affordable weekly premiums | Lower burden on government welfare systems |
+| Fast, transparent payouts | Higher trust in digital labor platforms |
+
+---
+
+## ⚙️ How It Works
+
+### Step 1: 📝 Worker Onboarding
+
+Workers register on the GigGuard web platform in under **5 minutes**:
+
+- **Personal Details** — name, contact, location (city/district)
+- **Work Profile** — type of gig work (delivery, ride-share, freelance, daily wage, etc.)
+- **Income Data** — average daily/weekly earnings, typical working hours
+- **Work Zones** — areas where they typically operate
+
+This data forms the foundation of their **personal risk profile**.
+
+---
+
+### Step 2: 🤖 Smart Plan Recommendation
+
+GigGuard's recommendation engine analyzes multiple data points to suggest the most suitable insurance plan:
+
+- Historical weather data for the worker's location *(past 5 years of disruption frequency)*
+- Declared income level to calculate appropriate coverage amounts
+- Work type risk factor *(e.g., delivery riders are more weather-exposed than freelance designers)*
+- Seasonal risk patterns *(monsoon months carry higher premiums)*
+
+The output is a **personalized insurance plan** — not a one-size-fits-all product.
+
+---
+
+### Step 3: 💳 Subscription & Premium Payment
+
+Workers choose from tiered plans and pay a small weekly premium:
+
+| Plan | Weekly Premium | Max Daily Coverage | Best For |
+|---|---|---|---|
+| 🟢 Basic Shield | ₹25–₹50 | ₹300–₹500 | Part-time gig workers |
+| 🔵 Standard Shield | ₹75–₹120 | ₹600–₹900 | Full-time delivery/ride-share |
+| 🟡 Premium Shield | ₹150–₹250 | ₹1,000–₹1,500 | High-income gig workers |
+
+Premiums are dynamically adjusted based on:
+- Current season and regional weather forecasts
+- Worker's claims history
+- Local weather risk score
+
+---
+
+### Step 4: 🌦️ Real-Time Weather Monitoring
+
+GigGuard runs a **continuous weather intelligence layer** across all registered worker locations, evaluated every **15 minutes**.
+
+**Monitored Parameters:**
+- Rainfall intensity (mm/hour)
+- Temperature extremes (heatwave thresholds)
+- Wind speed and storm alerts
+- Flood and waterlogging warnings
+- Cyclone and severe weather advisories
+- Air Quality Index *(where relevant to safety)*
+
+**Data Sources:**
+- 🇮🇳 India Meteorological Department (IMD) API
+- 🌐 OpenWeatherMap / WeatherAPI
+- 🚨 NDMA (National Disaster Management Authority) alerts
+- 🏙️ Local municipal flood monitoring systems
+
+---
+
+### Step 5: 🔔 Disruption Alert & Worker Notification
+
+When a weather threshold is breached in a worker's registered zone:
+
+1. GigGuard sends a **push notification / SMS alert** to the worker
+2. Worker receives **safety guidance** *(e.g., "Heavy rainfall detected in your area — avoid travel on 2-wheelers")*
+3. Worker is prompted to **confirm non-working status** via a simple app check-in or GPS inactivity detection
+4. **Compensation eligibility window opens**
+
+---
+
+### Step 6: ✅ Verification & Automated Payout
+
+Before releasing compensation, GigGuard runs a **multi-layer verification**:
+
+| Verification Layer | Description |
+|---|---|
+| 🌧️ Weather Verification | Cross-checks weather event data with 3 independent sources |
+| 📍 Location Verification | Confirms worker was in the affected zone at the time |
+| 📵 Activity Verification | Checks for absence of platform activity (delivery app, ride app) during disruption |
+| 🔍 Fraud Check | Runs the claim through the fraud detection module |
+
+Once verified, compensation is **automatically transferred** to the worker's registered UPI/bank account — typically within **2–4 hours** of the disruption event.
+
+---
+
