@@ -167,6 +167,7 @@ Before releasing compensation, GigGuard runs a **multi-layer verification**:
 Once verified, compensation is **automatically transferred** to the worker's registered UPI/bank account — typically within **2–4 hours** of the disruption event.
 
 
+
 ---
 
 ## 🧠 Adversarial Defense & Anti-Spoofing Strategy
@@ -263,4 +264,46 @@ GPS receivers detect signals using correlation peaks.
 
 
 ---
+## 🔴 Risk Classification System
+
+Gig Guard uses a **3-tier risk classification model** to determine compensation amounts:
+
+| Risk Level | Trigger Conditions | Compensation Rate | Example Scenario |
+|-----------|------------------|-------------------|------------------|
+| 🟡 Low Risk | Light rain (10–30mm/hr), mild temperature advisory | 30–50% of daily avg. income | Drizzle making 2-wheeler conditions slippery |
+| 🟠 Medium Risk | Heavy rain (30–64.5mm/hr), heatwave warning (>45°C), moderate storm | 50–75% of daily avg. income | Heavy monsoon downpour grounding delivery workers |
+| 🔴 High Risk | Extremely heavy rain (>64.5mm/hr), cyclone, flood, red alert issued | 80–100% of daily avg. income | Cyclone Michaung-level disruption; zero work possible |
+
+### Additional Classification Factors:
+- Duration of the disruption event (hourly vs. full-day)
+- Breadth of area affected (ward-level vs. city-wide)
+- Government advisory status (advisory vs. warning vs. emergency)
+- Platform suspension status (if gig apps suspend operations in the area)
+## 🛡️ Fraud Detection & Security
+
+Insurance systems are inherently vulnerable to fraud. Gig Guard employs a **multi-layer fraud prevention architecture** to protect the integrity of the platform and ensure legitimate workers receive fair compensation.
+
+### 🔍 GPS Spoofing Detection
+- Detects impossible location jumps (teleportation patterns)
+- Cross-validates GPS coordinates with cell tower triangulation
+- Flags suspicious location manipulation attempts
+- Compares claimed location with historical work patterns of the user
+
+### 👤 Fake Account Detection
+- Duplicate PAN/Aadhaar/mobile number detection at registration
+- Behavioral pattern analysis to detect bot-like registration patterns
+- Network graph analysis to identify coordinated fraud rings
+- Identity verification via DigiLocker integration (planned)
+
+### 📊 Activity Verification Engine
+- Platform API cross-checks (Swiggy, Zomato, Ola, Uber, etc.) to verify actual inactivity
+- GPS movement history analysis during claimed disruption window
+- Machine learning model trained on historical claim patterns to flag anomalies
+- Peer verification signals from nearby registered workers in the same zone
+
+### 🔐 Data Security
+- All personal and financial data encrypted at rest (AES-256) and in transit (TLS 1.3)
+- GDPR and DPDP Act (India) compliant data handling
+- No raw location data stored beyond 30 days
+- Role-based access control for all internal systems
 
