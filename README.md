@@ -1,23 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🛡️ Ergoshield: Income Protection for Gig Workers
+"Because no worker should have to choose between their safety and their livelihood."
 
-# Run and deploy your AI Studio app
-
+## 📋 Table of Contents 
+1. The Problem  
+2. Our Solution  
+3. How It Works  
+4. Risk Classification System  
+5. Fraud Detection & Security  
+6. Adversarial Defense & Anti-Spoofing Strategy  
+7. Tech Stack  
+8. Key Features  
+9. Target Users  
+10. Benefits  
 This contains everything you need to run your app locally.
 
-View your app in AI Studio: https://ai.studio/apps/21a1c17a-3e82-4ba5-b4d4-8095cf854f90
+---
 
-## Run Locally
+### 📊 Scale of the Crisis
 
-**Prerequisites:**  Node.js
+- The global gig economy employs over 1.5 billion people worldwide. In India alone, the gig workforce is projected to reach 23.5 million workers by 2030 (NITI Aayog). Yet this massive workforce operates in a financial vacuum — no paid leave, no employee benefits, and crucially, no income protection when they can't work.  
+---
 
+### 🌦️ Weather: 
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`  
+Weather disruptions are one of the most frequent and unpredictable causes of income loss for gig workers. Consider:  
 
 - A Zomato delivery partner cannot ride in heavy flooding — they earn zero for the day  
 - A Rapido bike taxi driver stops working during a heatwave warning — no compensation  
@@ -379,4 +385,3 @@ Early warnings sent before severe weather events
 - Reduced government welfare burden  
 - Better urban planning insights  
 - Global model for climate-risk protection  
->>>>>>> acdefffdcef63bff4eca4dd851e385b78f118599
