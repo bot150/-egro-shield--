@@ -1,9 +1,0 @@
-{
-  "name": "ErgoShield",
-  "description": "Empowering gig workers with AI-driven income protection. Because your hard work deserves a safety net that's as fast as you are.",
-  "requestFramePermissions": [
-    "camera",
-    "microphone",
-    "geolocation"
-  ]
-}
