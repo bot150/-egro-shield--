@@ -2,7 +2,6 @@
 "Because no worker should have to choose between their safety and their livelihood."
 
 ---
-# Run and deploy your AI Studio app
 
 ## 📋 Table of Contents 
 1. The Problem  
@@ -18,12 +17,6 @@
 This contains everything you need to run your app locally.
 
 ---
-View your app in AI Studio: https://ai.studio/apps/21a1c17a-3e82-4ba5-b4d4-8095cf854f90
-
-## Run Locally
-
-## ⚠️ The Problem
-**Prerequisites:**  Node.js
 
 ### 📊 Scale of the Crisis
 
