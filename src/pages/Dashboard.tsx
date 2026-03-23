@@ -23,6 +23,7 @@ import {
   Shield,
   ArrowRight
 } from 'lucide-react';
+import Weather from "../weather"; // adjust path
 
 export const Dashboard: React.FC = () => {
   const { profile } = useAuth();
@@ -72,7 +73,10 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
+       <Weather />
+
       {/* Welcome Section */}
+      
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold text-neutral-900">Hello, {profile?.fullName.split(' ')[0]}!</h2>
