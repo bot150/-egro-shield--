@@ -1,6 +1,6 @@
-import { GoogleGenAI } from "@google/genai";
+//import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+//const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
 export async function verifyAadhar(aadharNumber: string, base64Image: string, mimeType: string) {
   const model = ai.models.generateContent({
