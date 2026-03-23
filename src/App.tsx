@@ -11,6 +11,17 @@ import { ProfilePage } from './pages/Profile';
 import { SupportPage } from './pages/Support';
 import { InsurancePage } from './pages/Insurance';
 import { Landing } from './pages/Landing';
+import Weather from "./weather"; // adjust path if needed
+
+function App() {
+  return (
+    <>
+      <Weather />
+    </>
+  );
+}
+
+export default App;
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean }> = ({ children, adminOnly }) => {
   const { user, profile, loading } = useAuth();
