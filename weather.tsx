@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function Weather() {
+export default function wea() {
   useEffect(() => {
     const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
