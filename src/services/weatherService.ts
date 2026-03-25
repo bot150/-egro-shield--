@@ -10,7 +10,7 @@ export const fetchWeatherByCoords = async (lat: number, lon: number): Promise<We
     console.warn("Weather API key not configured. Using mock data.");
     let cityName = "Detected Location";
     try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon} and units=metric&appid=${API_KEY}`);
       if (res.ok) {
         const geoData = await res.json();
         cityName = geoData.address?.city || geoData.address?.town || geoData.address?.village || geoData.address?.county || "Detected Location";
@@ -29,7 +29,7 @@ export const fetchWeatherByCoords = async (lat: number, lon: number): Promise<We
     };
   }
 
-  const response = await fetch(`${BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`);
+  const response = await fetch(`${BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&appid=${API_KEY}`);
   if (!response.ok) {
     const errorData = await response.json();
     if (response.status === 401) {
@@ -57,7 +57,7 @@ export const fetchWeatherByCity = async (city: string): Promise<WeatherData> => 
     };
   }
 
-  const response = await fetch(`${BASE_URL}?q=${city}&appid=${API_KEY}&units=metric`);
+  const response = await fetch(`${BASE_URL}?q=${city}&appid=${API_KEY}&units=metric&appid=${API_KEY}`);
   if (!response.ok) {
     const errorData = await response.json();
     if (response.status === 401) {
