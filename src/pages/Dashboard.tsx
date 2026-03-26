@@ -86,7 +86,7 @@ export const Dashboard: React.FC = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             amount: profile.weeklyPremium || 50,
-            receipt: `receipt_dash_${profile.uid}_${Date.now()}`,
+            receipt: `rcpt_${profile.uid.slice(0, 8)}_${Date.now()}`,
           }),
         })
       ]);

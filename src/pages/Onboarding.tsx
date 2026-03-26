@@ -197,7 +197,7 @@ export const Onboarding: React.FC = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             amount: riskResult.premium, // in INR
-            receipt: `receipt_${user.uid}_${Date.now()}`,
+            receipt: `rcpt_${user.uid.slice(0, 8)}_${Date.now()}`,
           }),
         }),
         fetch('/api/payment/key').then(r => r.json())

@@ -7,9 +7,12 @@ import {
   ChevronUp, 
   CheckCircle2, 
   ArrowRight,
-  TrendingUp
+  TrendingUp,
+  Loader2,
+  AlertCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useAuth } from '../AuthContext';
 
 const plans = [
   {
@@ -93,7 +96,102 @@ const colorMap: Record<string, { border: string, bg: string, text: string, ring:
 };
 
 export const InsurancePage: React.FC = () => {
+  const { profile } = useAuth();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [payingPlanId, setPayingPlanId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const handlePayment = async (plan: typeof plans[0]) => {
+    setLoading(true);
+    setPayingPlanId(plan.id);
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      // 1. Get Razorpay Key & Create Order in parallel
+      const [keyRes, orderRes] = await Promise.all([
+        fetch('/api/payment/key').then(r => r.json()),
+        fetch('/api/payment/order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: plan.premium,
+            receipt: `rcpt_${(profile?.uid || 'g').slice(0, 8)}_${Date.now()}`,
+          }),
+        })
+      ]);
+
+      if (keyRes.error) {
+        setError(keyRes.error);
+        setLoading(false);
+        setPayingPlanId(null);
+        return;
+      }
+      const { key } = keyRes;
+
+      if (!orderRes.ok) throw new Error('Failed to create payment order');
+      const order = await orderRes.json();
+
+      // 2. Open Razorpay Checkout
+      const options = {
+        key,
+        amount: order.amount,
+        currency: order.currency,
+        name: "ErgoShield Insurance",
+        description: `${plan.name} - Weekly Premium`,
+        order_id: order.id,
+        handler: async (response: any) => {
+          // 3. Verify Payment
+          try {
+            const verifyRes = await fetch('/api/payment/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(response),
+            });
+
+            if (verifyRes.ok) {
+              setSuccessMessage(`${plan.name} activated successfully! Your coverage is now active.`);
+            } else {
+              setError('Payment verification failed. Please contact support.');
+            }
+          } catch {
+            setError('Payment verification failed. Please try again.');
+          }
+          setLoading(false);
+          setPayingPlanId(null);
+        },
+        prefill: {
+          name: profile?.fullName || '',
+          email: profile?.email || '',
+          contact: profile?.phoneNumber || '',
+        },
+        theme: {
+          color: "#059669",
+        },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
+            setPayingPlanId(null);
+          }
+        }
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on('payment.failed', function (response: any) {
+        setError(`Payment failed: ${response.error.description}`);
+        setLoading(false);
+        setPayingPlanId(null);
+      });
+      rzp.open();
+    } catch (err) {
+      console.error(err);
+      setError('Failed to initiate payment. Please try again.');
+      setLoading(false);
+      setPayingPlanId(null);
+    }
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
@@ -101,6 +199,22 @@ export const InsurancePage: React.FC = () => {
         <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter text-neutral-900 mb-2">Insurance Plans</h2>
         <p className="text-neutral-500 font-medium">Choose the best protection plan for your gig work.</p>
       </div>
+
+      {error && (
+        <div className="bg-red-50 text-red-600 p-4 rounded-xl flex items-center gap-3 border border-red-100 animate-in fade-in slide-in-from-top-2">
+          <AlertCircle size={20} />
+          <span className="text-sm font-medium">{error}</span>
+          <button onClick={() => setError(null)} className="ml-auto text-red-400 hover:text-red-600 font-bold text-xs">✕</button>
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="bg-emerald-50 text-emerald-700 p-4 rounded-xl flex items-center gap-3 border border-emerald-100 animate-in fade-in slide-in-from-top-2">
+          <CheckCircle2 size={20} />
+          <span className="text-sm font-medium">{successMessage}</span>
+          <button onClick={() => setSuccessMessage(null)} className="ml-auto text-emerald-400 hover:text-emerald-600 font-bold text-xs">✕</button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {plans.map((plan) => (
@@ -154,6 +268,7 @@ export const InsurancePage: React.FC = () => {
             {(() => {
               const plan = plans.find(p => p.id === selectedPlan)!;
               const colors = colorMap[plan.color];
+              const isPayingThis = payingPlanId === plan.id;
               return (
                 <div className={`relative bg-gradient-to-br from-white ${colors.from} rounded-[40px] border-2 ${colors.borderLight} shadow-2xl overflow-hidden`}>
                   {/* Top Header */}
@@ -207,9 +322,22 @@ export const InsurancePage: React.FC = () => {
                         <p className="text-[10px] font-black uppercase text-neutral-400 tracking-widest mb-2">Ideal For</p>
                         <p className={`text-base font-bold ${colors.text} leading-snug`}>{plan.target}</p>
                       </div>
-                      <button className={`w-full py-5 rounded-[24px] bg-neutral-900 text-white font-black text-lg ${colors.hover} transition-all flex items-center justify-center gap-3 group/btn shadow-xl hover:scale-[1.02] active:scale-[0.98]`}>
-                        Activate {plan.name}
-                        <ArrowRight size={22} className="group-hover/btn:translate-x-1.5 transition-transform" />
+                      <button
+                        onClick={() => handlePayment(plan)}
+                        disabled={loading}
+                        className={`w-full py-5 rounded-[24px] bg-neutral-900 text-white font-black text-lg ${colors.hover} transition-all flex items-center justify-center gap-3 group/btn shadow-xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100`}
+                      >
+                        {isPayingThis ? (
+                          <>
+                            <Loader2 size={22} className="animate-spin" />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            Activate {plan.name}
+                            <ArrowRight size={22} className="group-hover/btn:translate-x-1.5 transition-transform" />
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
