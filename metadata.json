@@ -1,0 +1,9 @@
+{
+  "name": "ErgoShield",
+  "description": "A next-generation weather-based income protection platform built specifically for gig workers.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "entities": {
+    "users": {
+      "title": "User",
+      "description": "Registered delivery workers and admins",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phoneNumber": { "type": "string" },
+        "role": { "type": "string", "enum": ["worker", "admin"] },
+        "category": { "type": "string", "enum": ["food", "ecommerce", "quick_commerce"] },
+        "subCategory": { "type": "string" },
+        "aadharNumber": { "type": "string" },
+        "bankAccountNumber": { "type": "string" },
+        "ifscCode": { "type": "string" },
+        "age": { "type": "integer" },
+        "address": { "type": "string" },
+        "riskScore": { "type": "number" },
+        "weeklyPremium": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "fullName", "email", "role"]
+    },
+    "policies": {
+      "title": "Insurance Policy",
+      "description": "Active insurance policies for workers",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "expired", "cancelled"] },
+        "startDate": { "type": "string", "format": "date-time" },
+        "endDate": { "type": "string", "format": "date-time" },
+        "premiumAmount": { "type": "number" },
+        "coverageAmount": { "type": "number" }
+      },
+      "required": ["userId", "status", "startDate", "endDate"]
+    },
+    "claims": {
+      "title": "Insurance Claim",
+      "description": "Automatically or manually triggered claims",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "policyId": { "type": "string" },
+        "triggerEvent": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "processed", "flagged"] },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "location": { "type": "object" }
+      },
+      "required": ["userId", "triggerEvent", "amount", "status", "timestamp"]
+    },
+    "disruptions": {
+      "title": "Disruption Event",
+      "description": "External disruption events like weather or outages",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "severity": { "type": "string" },
+        "location": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "affectedCount": { "type": "integer" }
+      },
+      "required": ["type", "severity", "timestamp"]
+    },
+    "indices": {
+      "title": "Uniqueness Index",
+      "description": "Used to enforce uniqueness of Aadhar and Bank accounts",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string" },
+        "type": { "type": "string", "enum": ["aadhar", "bank"] }
+      },
+      "required": ["ownerId", "type"]
+    },
+    "support_messages": {
+      "title": "Support Message",
+      "description": "Customer support queries sent via email form",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Sender's Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string", "enum": ["new", "read", "responded"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "response": { "type": "string" },
+        "respondedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "subject", "message", "status", "createdAt"]
+    },
+    "premium_payments": {
+      "title": "Premium Payment",
+      "description": "Weekly premium payment records",
+      "type": "object",
+      "properties": {
+        "policyId": { "type": "string" },
+        "userId": { "type": "string" },
+        "weekNumber": { "type": "integer" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["paid", "pending"] },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "paidAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["policyId", "userId", "weekNumber", "amount", "status", "dueDate"]
+    },
+    "risk_factors": {
+      "title": "Risk Factor",
+      "description": "External risk monitoring data",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "value": { "type": "string" },
+        "threshold": { "type": "string" },
+        "isTriggered": { "type": "boolean" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "source": { "type": "string", "enum": ["weather_api", "aqi_api", "gov_alerts"] }
+      },
+      "required": ["type", "value", "threshold", "isTriggered", "timestamp", "source"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "users",
+      "description": "User profiles"
+    },
+    "/policies/{policyId}": {
+      "schema": "policies",
+      "description": "Active policies"
+    },
+    "/premium_payments/{paymentId}": {
+      "schema": "premium_payments",
+      "description": "Premium payment records"
+    },
+    "/risk_factors/{riskId}": {
+      "schema": "risk_factors",
+      "description": "Risk factor monitoring data"
+    },
+    "/claims/{claimId}": {
+      "schema": "claims",
+      "description": "Insurance claims"
+    },
+    "/disruptions/{disruptionId}": {
+      "schema": "disruptions",
+      "description": "Global disruption events"
+    },
+    "/indices/{indexId}": {
+      "schema": "indices",
+      "description": "Uniqueness indices for Aadhar/Bank"
+    },
+    "/support_messages/{messageId}": {
+      "schema": "support_messages",
+      "description": "Customer support messages"
+    }
+  }
+}

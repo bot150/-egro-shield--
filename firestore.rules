@@ -1,0 +1,162 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    // Collection: users
+    // Fields: uid, fullName, email, role, category, subCategory, aadharNumber, bankAccountNumber, ifscCode, age, riskScore, weeklyPremium, createdAt
+    
+    // Collection: policies
+    // Fields: userId, status, startDate, endDate, premiumAmount, coverageAmount
+    
+    // Collection: claims
+    // Fields: userId, policyId, triggerEvent, amount, status, timestamp, location
+    
+    // Collection: disruptions
+    // Fields: type, severity, location, timestamp, affectedCount
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "sreenandasai24@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'fullName', 'email']) &&
+             data.uid is string &&
+             data.fullName is string && data.fullName.size() > 0 && data.fullName.size() < 100 &&
+             data.email is string &&
+             (!('role' in data) || data.role in ['worker', 'admin']) &&
+             // Optional fields added during registration/onboarding
+             (!('phoneNumber' in data) || data.phoneNumber is string) &&
+             (!('createdAt' in data) || data.createdAt is string) &&
+             (!('category' in data) || data.category in ['food', 'ecommerce', 'quick_commerce']) &&
+             (!('subCategory' in data) || data.subCategory is string) &&
+             (!('aadharNumber' in data) || (data.aadharNumber is string && data.aadharNumber.size() >= 12)) &&
+             (!('bankAccountNumber' in data) || data.bankAccountNumber is string) &&
+             (!('ifscCode' in data) || data.ifscCode is string) &&
+             (!('age' in data) || (data.age is number && data.age >= 18 && data.age <= 100)) &&
+             (!('address' in data) || (data.address is string && data.address.size() < 500)) &&
+             (!('riskScore' in data) || data.riskScore is number) &&
+             (!('weeklyPremium' in data) || data.weeklyPremium is number) &&
+             (!('onboarded' in data) || data.onboarded is bool) &&
+             (!('aadharVerified' in data) || data.aadharVerified is bool) &&
+             (!('bankVerified' in data) || data.bankVerified is bool) &&
+             (!('insurance' in data) || data.insurance is map);
+    }
+
+    function isValidPolicy(data) {
+      return data.keys().hasAll(['userId', 'status', 'startDate', 'endDate', 'policyName']) &&
+             data.userId is string &&
+             data.status in ['active', 'expired', 'cancelled', 'inactive'] &&
+             data.startDate is string &&
+             data.endDate is string &&
+             data.policyName is string;
+    }
+
+    function isValidPremiumPayment(data) {
+      return data.keys().hasAll(['policyId', 'userId', 'weekNumber', 'amount', 'status', 'dueDate']) &&
+             data.policyId is string &&
+             data.userId is string &&
+             data.weekNumber is number &&
+             data.amount is number &&
+             data.status in ['paid', 'pending'] &&
+             data.dueDate is string;
+    }
+
+    function isValidClaim(data) {
+      return data.keys().hasAll(['userId', 'triggerEvent', 'amount', 'status', 'timestamp']) &&
+             data.userId is string &&
+             data.amount is number &&
+             data.status in ['pending', 'processed', 'flagged'] &&
+             data.timestamp is string;
+    }
+
+    function isValidSupportMessage(data) {
+      return data.keys().hasAll(['email', 'subject', 'message', 'status', 'createdAt']) &&
+             data.email is string && data.email.size() > 0 && data.email.size() < 100 &&
+             data.subject is string && data.subject.size() > 0 && data.subject.size() < 200 &&
+             data.message is string && data.message.size() > 0 && data.message.size() < 5000 &&
+             data.status in ['new', 'read', 'responded'] &&
+             data.createdAt is string &&
+             (!('uid' in data) || data.uid is string) &&
+             (!('response' in data) || data.response is string) &&
+             (!('respondedAt' in data) || data.respondedAt is string);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated() && isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isAuthenticated() && isOwner(userId) && isValidUser(request.resource.data);
+    }
+
+    match /policies/{policyId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid && isValidPolicy(request.resource.data);
+      allow update: if isAdmin();
+    }
+
+    match /claims/{claimId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow create: if isAuthenticated() && (request.auth.uid == request.resource.data.userId || isAdmin()) && isValidClaim(request.resource.data);
+      allow update: if isAdmin();
+    }
+
+    match /disruptions/{disruptionId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /policy_templates/{templateId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /premium_payments/{paymentId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid && isValidPremiumPayment(request.resource.data);
+      allow update: if isAdmin();
+    }
+
+    match /risk_factors/{factorId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /transactions/{transactionId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    match /indices/{indexId} {
+      // Allow any user to check if an index exists (for uniqueness validation during registration)
+      allow get, list: if true;
+      // Allow user to create their own index
+      allow create: if isAuthenticated() && request.resource.data.ownerId == request.auth.uid;
+      // Allow user to update their own index (if needed)
+      allow update: if isAuthenticated() && resource.data.ownerId == request.auth.uid;
+    }
+
+    match /support_messages/{messageId} {
+      allow read: if isAdmin();
+      allow create: if isValidSupportMessage(request.resource.data);
+      allow update: if isAdmin();
+    }
+  }
+}
